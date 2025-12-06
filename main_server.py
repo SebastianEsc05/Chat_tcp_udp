@@ -19,9 +19,9 @@ class Colors:
     RED = '\033[91m'
 
 class ChatServer:
-    # Obtiene la IP local de la computadora para que otros se conecten
+    # Obtiene la ip local de la computadora para que otros se conecten
     # Retorna:
-    #   La IP local 
+    #   La ip local 
     @staticmethod
     def get_local_ip():
         try:
