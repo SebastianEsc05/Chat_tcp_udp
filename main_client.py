@@ -31,7 +31,7 @@ class ChatClient:
         self.port = port
         self.protocol_type = protocol_type
         self.running = True
-
+        
         if self.protocol_type == 'tcp':
             self.transport = TCPTransport()
             try:
