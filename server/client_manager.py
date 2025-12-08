@@ -3,11 +3,11 @@ import threading
 class ClientManager:
     # Constructor: Prepara el gestor de clientes
     # Parametros:
-    #   max_clients: Cuantos clientes permitimos como maximo (5)
+    #   max_clients: Cuantos clientes permitimos como maximo (por defecto 5)
     def __init__(self, max_clients=5):
-        self.clients = {}  
+        self.clients = {} 
         self.max_clients = max_clients
-        self.lock = threading.Lock() 
+        self.lock = threading.Lock()
 
     # Agrega un nuevo cliente al chat
     # Parametros:
@@ -15,7 +15,7 @@ class ClientManager:
     #   addr: La direccion IP y puerto del cliente
     #   transport: La conexion para enviarle mensajes
     # Retorna:
-    #   True si se agregó el cliente de forma correcta, False si esta lleno o ya existe el nombre
+    #   True si se agrego bien, False si esta lleno o ya existe el nombre
     def add_client(self, username, addr, transport):
         with self.lock:
             if len(self.clients) >= self.max_clients:

@@ -89,7 +89,7 @@ class ChatClient:
         msg_type = msg.get('type')
         sender = msg.get('sender')
         payload = msg.get('payload')
-        proto = msg.get('sender_proto')
+        proto = msg.get('sender_protocol')
         # Obtener fecha y hora actual
         timestamp = datetime.now().strftime("%H:%M:%S")
         proto_tag = f"{Colors.YELLOW}{Colors.BOLD}[{proto}]{Colors.RESET}"
@@ -100,7 +100,7 @@ class ChatClient:
                 print(f"\n{Colors.GRAY}[{timestamp}]{Colors.RESET} {proto_tag} {Colors.CYAN}<{sender}>{Colors.RESET} {payload}")
                 
         elif msg_type == Protocol.PRIVATE_MSG:
-            print(f"\n{Colors.GRAY}[{timestamp}]{Colors.RESET} {Colors.MAGENTA}{Colors.BOLD}[Privado de {sender}]{Colors.RESET} {Colors.MAGENTA}{payload}{Colors.RESET}")
+            print(f"\n{Colors.GRAY}[{timestamp}]{Colors.RESET} {proto_tag} {Colors.MAGENTA}{Colors.BOLD}[Privado de {sender}]{Colors.RESET} {Colors.MAGENTA}{payload}{Colors.RESET}")
             
         elif msg_type == Protocol.ERROR:
             print(f"\n{Colors.RED}{Colors.BOLD}Error:{Colors.RESET} {Colors.RED}{payload}{Colors.RESET}")
@@ -166,3 +166,4 @@ if __name__ == "__main__":
 
     client = ChatClient(args.username, args.host, args.port, args.protocol)
     client.start()
+    

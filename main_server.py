@@ -210,7 +210,7 @@ class ChatServer:
         elif msg_type == Protocol.PRIVATE_MSG:
             target = msg.get('target')
             # Mostrar mensaje privado con fecha y hora
-            timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            timestamp = datetime.now().strftime("%H:%M:%S")
             print(f"{Colors.GRAY}[{timestamp}]{Colors.RESET} {Colors.YELLOW}[{sender_protocol}]{Colors.RESET} {Colors.CYAN}{sender} -> {target}:{Colors.RESET} {msg.get('payload')}")
             self.send_private(msg, target, sender,sender_protocol)
             return None
