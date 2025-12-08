@@ -16,12 +16,13 @@ class Protocol:
     #Retorna: 
     #   Mensaje convertido en bytes codificado en utf-8
     @staticmethod
-    def create_message(msg_type, sender, payload="", target=None):
+    def create_message(msg_type, sender, payload="", target=None, sender_protocol=""):
         msg = {
             "type": msg_type,
             "sender": sender,
             "payload": payload,
-            "target": target
+            "target": target,
+            "sender_protocol": sender_protocol
         }
         return json.dumps(msg).encode('utf-8')
     #Convierte los bytes recibidos de vuelta a un diccionario de python

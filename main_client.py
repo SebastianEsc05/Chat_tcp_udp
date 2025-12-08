@@ -89,15 +89,15 @@ class ChatClient:
         msg_type = msg.get('type')
         sender = msg.get('sender')
         payload = msg.get('payload')
-        
+        proto = msg.get('sender_proto')
         # Obtener fecha y hora actual
         timestamp = datetime.now().strftime("%H:%M:%S")
-        
+        proto_tag = f"{Colors.YELLOW}{Colors.BOLD}[{proto}]{Colors.RESET}"
         if msg_type == Protocol.PUBLIC_MSG:
             if sender == "SERVER":
                 print(f"\n{Colors.GRAY}[{timestamp}]{Colors.RESET} {Colors.YELLOW}{Colors.BOLD}[Servidor]{Colors.RESET} {Colors.YELLOW}{payload}{Colors.RESET}")
             else:
-                print(f"\n{Colors.GRAY}[{timestamp}]{Colors.RESET} {Colors.CYAN}<{sender}>{Colors.RESET} {payload}")
+                print(f"\n{Colors.GRAY}[{timestamp}]{Colors.RESET} {proto_tag} {Colors.CYAN}<{sender}>{Colors.RESET} {payload}")
                 
         elif msg_type == Protocol.PRIVATE_MSG:
             print(f"\n{Colors.GRAY}[{timestamp}]{Colors.RESET} {Colors.MAGENTA}{Colors.BOLD}[Privado de {sender}]{Colors.RESET} {Colors.MAGENTA}{payload}{Colors.RESET}")
@@ -138,7 +138,8 @@ class ChatClient:
                     target = parts[1]
                     content = parts[2]
                     msg = Protocol.create_message(Protocol.PRIVATE_MSG, self.username, content, target=target)
-                    print(f"{Colors.MAGENTA}Tu -> {target}:{Colors.RESET} {content}")
+                    my_proto_tag = f"{Colors.YELLOW}{Colors.BOLD}[{self.protocol_type.upper()}]{Colors.RESET}"
+                    print(f"{my_proto_tag} {Colors.MAGENTA}Tu -> {target}:{Colors.RESET} {content}")
                 else:
                     # Mensaje publico
                     msg = Protocol.create_message(Protocol.PUBLIC_MSG, self.username, text)

@@ -186,6 +186,7 @@ class ChatServer:
     def process_message(self, msg, addr, transport):
         msg_type = msg.get('type')
         sender = msg.get('sender')
+        sender_protocol = "TCP" if isinstance(transport,TCPTransport) else "UDP"
 
         if msg_type == Protocol.LOGIN:
             if self.client_manager.add_client(sender, addr, transport):
@@ -202,16 +203,16 @@ class ChatServer:
         if msg_type == Protocol.PUBLIC_MSG:
             # Mostrar mensaje con fecha y hora
             timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            print(f"{Colors.GRAY}[{timestamp}]{Colors.RESET} {Colors.BLUE}<{sender}>{Colors.RESET} {msg.get('payload')}")
-            self.broadcast(msg, sender)
+            print(f"{Colors.GRAY}[{timestamp}]{Colors.RESET} {Colors.YELLOW}[{sender_protocol}]{Colors.RESET} {Colors.BLUE}<{sender}>{Colors.RESET} {msg.get('payload')}")
+            self.broadcast(msg, sender,sender_protocol)
             return None
 
         elif msg_type == Protocol.PRIVATE_MSG:
             target = msg.get('target')
             # Mostrar mensaje privado con fecha y hora
             timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            print(f"{Colors.GRAY}[{timestamp}]{Colors.RESET} {Colors.CYAN}{sender} -> {target}:{Colors.RESET} {msg.get('payload')}")
-            self.send_private(msg, target, sender)
+            print(f"{Colors.GRAY}[{timestamp}]{Colors.RESET} {Colors.YELLOW}[{sender_protocol}]{Colors.RESET} {Colors.CYAN}{sender} -> {target}:{Colors.RESET} {msg.get('payload')}")
+            self.send_private(msg, target, sender,sender_protocol)
             return None
 
         return None
@@ -220,10 +221,17 @@ class ChatServer:
     # Parametros:
     #   msg_dict: El contenido del mensaje
     #   sender: Quien lo envia
-    def broadcast(self, msg_dict, sender):
-        data = Protocol.create_message(msg_dict['type'], sender, msg_dict['payload'])
+    def broadcast(self, msg_dict, sender, sender_protocol):
+        data = Protocol.create_message(
+            msg_dict['type'], 
+            sender, 
+            msg_dict['payload'], 
+            target=None,            
+            sender_protocol=sender_protocol 
+        )
         for user in self.client_manager.get_all_clients():
             self._send_to_user(user, data)
+
 
     # Envia un mensaje del sistema a todos (ej: "Usuario entro")
     # Parametros:
@@ -238,8 +246,8 @@ class ChatServer:
     #   msg_dict: El contenido del mensaje
     #   target: El nombre del usuario destino
     #   sender: Quien lo envia
-    def send_private(self, msg_dict, target, sender):
-        data = Protocol.create_message(Protocol.PRIVATE_MSG, sender, msg_dict['payload'], target=target)
+    def send_private(self, msg_dict, target, sender, sender_proto):
+        data = Protocol.create_message(Protocol.PRIVATE_MSG, sender, msg_dict['payload'], target=target, sender_protocol=sender_proto)
         if self.client_manager.is_member(target):
             self._send_to_user(target, data)
         else:
